@@ -4,7 +4,7 @@ from fastapi import status
 from fastapi import HTTPException
 from fastapi import Body, Path
 from personal_admon_backend.orm.schemas import UsuariosSchema, UsuariosCreateSchema, CategoriasSchema, \
-    PostsCreateSchema, PostsSchema
+    PostsCreateSchema, PostsSchema, CategoryGetSchema
 from personal_admon_backend.crud import crud_usuarios, crud_categorias, crud_posts
 from personal_admon_backend.orm.database import *
 
@@ -75,7 +75,7 @@ def show_usuario(
 
     Returns a UserSchema model with id, login, password, nickname and email
     """
-    usuario: dict = crud_usuarios.read_usuario(usuario_id=usuario_id)
+    usuario = crud_usuarios.read_usuario(usuario_id=usuario_id)
     if usuario:
         return usuario
     else:
@@ -134,7 +134,7 @@ def create_categoria(categoria: CategoriasSchema = Body(...)):
 @app.get(
     path="/categorias/{categoria_id}",
     status_code=status.HTTP_200_OK,
-    response_model=CategoriasSchema,
+    response_model=CategoryGetSchema,
     tags=["categorias"]
 )
 def show_categoria(
@@ -144,7 +144,7 @@ def show_categoria(
             description="This is Categoria Id. It´s required",
         )
 ):
-    categoria: dict = crud_categorias.read_categoria(categoria_id=categoria_id)
+    categoria = crud_categorias.read_categoria(categoria_id=categoria_id)
     if categoria:
         return categoria
     else:

@@ -4,27 +4,6 @@ from personal_admon_backend.orm import models
 from personal_admon_backend.orm.schemas import *
 
 
-def get_usuario(db: Session, usuario_id: int):
-    return db.query(models.Usuario).filter(models.Usuario.id == usuario_id).first()
-
-
-def create_usuario(db: Session, usuario: UsuariosCreateSchema):
-    db_item = models.Usuario(**usuario.dict())
-    db.add(db_item)
-    db.commit()
-    return db_item
-
-
-def update_usuario(db: Session, usuario: UsuariosSchema):
-    db.query(models.Usuario).filter(models.Usuario.id == usuario.id).update(usuario.dict())
-    db.commit()
-
-
-def delete_usuario(db: Session, usuario_id: int):
-    db_item = db.query(models.Usuario).filter(models.Usuario.id == usuario_id).first()
-    db.delete(db_item)
-    db.commit()
-
 # crud Movement
 
 
@@ -34,3 +13,49 @@ def create_movement(db: Session, movement: MovementCreateSchema):
     db.commit()
     return db_item
 
+
+def get_movement(db: Session, movement_id: int):
+    return db.query(models.Movement).filter(models.Movement.id == movement_id).first()
+
+
+def get_all_movement(db: Session):
+    return db.query(models.Movement).filter().all()
+
+
+# crud category
+
+
+def create_category(db: Session, category: CategoryCreateSchema):
+    db_item = models.Category(**category.dict())
+    db.add(db_item)
+    db.commit()
+    return db_item
+
+
+def get_category(db: Session, category_id: int):
+    return db.query(models.Category).filter(models.Category.id == category_id).first()
+
+
+def get_all_category(db: Session):
+    return db.query(models.Category).filter().all()
+
+
+# crud account
+def get_account(db: Session, account_id: int):
+    return db.query(models.Account).filter(models.Account.id == account_id).first()
+
+
+def create_account(db: Session, account: AccountCreateSchema):
+    db_item = models.Account(**account.dict())
+    db.add(db_item)
+    db.commit()
+    return db_item
+
+
+def get_all_account(db: Session):
+    return db.query(models.Account).filter().all()
+
+
+# crud debit transaction
+def get_debit_transaction(db: Session, debit_transaction_id: int):
+    return db.query(models.DebitTransaction).filter(models.DebitTransaction.id == debit_transaction_id).first()

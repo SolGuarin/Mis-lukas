@@ -1,98 +1,27 @@
-from datetime import date
+import uuid
+
 from pydantic import BaseModel
 from pydantic import Field
 
 
-class UsuariosCreateSchema(BaseModel):
-    login: str = Field(
-        ...,
-        min_length=1,
-        max_length=25,
-        example="juanjosegdoj"
-    )
-    password: str = Field(
-        ...,
-        min_length=1,
-        max_length=30,
-        example="super-secret"
-    )
-    nickname: str = Field(
-        ...,
-        min_length=1,
-        max_length=30,
-        example="juanjosegdoj"
-    )
-    email: str = Field(
-        ...,
-        min_length=1,
-        max_length=30,
-        example="juanjosegdoj@gmail.com"
-    )
-
-
-class UsuariosSchema(UsuariosCreateSchema):
-    id: int = Field(
-        ...,
-        example=1
-    )
-
-    class Config:
-        orm_mode = True
-
-
-class CategoriasCreateSchema(BaseModel):
-    nombre_categoria: str = Field(
-        ...
-    )
-
-
-class CategoriasSchema(CategoriasCreateSchema):
-    id: int = Field(
-        ...,
-    )
-
-    class Config:
-        orm_mode = True
-
-
-class PostsCreateSchema(BaseModel):
-    titulo: str = Field(
-        ...,
-        min_length=1,
-        max_length=100,
-
-    )
-    fecha_publicacion : date = Field(
-        ...
-    )
-    contenido: str = Field(
-        ...,
-        min_length=1,
-        max_length=5000,
-    )
-    estatus: str = Field(
-        ...
-    )
-    usuario_id: int = Field(
-        ...
-    )
-    categoria_id: int = Field(
-        ...
-    )
-
-
-class PostsSchema (PostsCreateSchema):
-    id: int = Field(
-        ...
-    )
-
-    class Config:
-        orm_mode = True
-
 # schema movement
 
-
 class MovementCreateSchema(BaseModel):
+    account_id: int = Field()
+    category_id: int = Field()
+    amount: float = Field()
+    note: str = Field()
+    description: str = Field()
+    from_account_id: int = Field()
+    to_account_id: int = Field()
+    type: str = Field()
+    date: str = Field()
+
+    class Config:
+        orm_mode = True
+
+
+class MovementGetSchema(BaseModel):
     id: int = Field()
     account_id: int = Field()
     category_id: int = Field()
@@ -103,3 +32,55 @@ class MovementCreateSchema(BaseModel):
     to_account_id: int = Field()
     type: str = Field()
     date: str = Field()
+
+    class Config:
+        orm_mode = True
+
+
+# schema category
+
+
+class CategoryCreateSchema(BaseModel):
+    name: str = Field()
+    type: str = Field()
+
+    class Config:
+        orm_mode = True
+
+
+class CategoryGetSchema(BaseModel):
+    id: int = Field()
+    name: str = Field()
+    type: str = Field()
+
+    class Config:
+        orm_mode = True
+
+
+# schema account
+class AccountCreateSchema(BaseModel):
+    name: str = Field()
+    type: str = Field()
+    note: str = Field()
+
+
+class AccountGetSchema(BaseModel):
+    id: int = Field()
+    name: str = Field()
+    type: str = Field()
+    note: str = Field()
+
+    class Config:
+        orm_mode = True
+
+
+"""
+# schema Debit Transaction
+class DebitTransactionGetSchema(BaseModel):
+    id: int = Field()
+    uid: uuid = Field()
+    source: str = Field()
+"""
+
+
+

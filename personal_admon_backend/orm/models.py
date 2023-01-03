@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, Float, BigInteger
+from sqlalchemy import Column, Integer, String, TIMESTAMP, Float, BigInteger, Boolean
 from datetime import date
 from sqlalchemy.dialects import postgresql
 from personal_admon_backend.orm.database import Base
@@ -50,20 +50,33 @@ class DebitTransaction(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     uid = Column(postgresql.UUID(as_uuid=True), primary_key=True)
+    date = Column(String)
+    description = Column(String)
+    value = Column(Float)
+    account = Column(String)
+    repetition = Column(Integer)
+    branch_office = Column(String)
+    discount = Column(Float)
+    balance = Column(Float)
+    source_file = Column(String)
+    reference = Column(String)
+    document = Column(String)
+    office = Column(String)
     source = Column(String)
 
 
 class CreditTransaction(Base):
     __tablename__ = "credit_transaction"
 
-    uid = Column(postgresql.UUID(as_uuid=True), primary_key=True)
     id = Column(Integer)
-    transaction_date = Column(TIMESTAMP)
+    uid = Column(postgresql.UUID(as_uuid=True), primary_key=True)
+    nro_authorization = Column(String)
+    transaction_date = Column(String)
     description = Column(String)
     original_value = Column(Float)
     currency = Column(String)
-    source = Column(String)
-    source_type = Column(String)
+    repetition = Column(BigInteger)
+    is_temporal = Column(Boolean)
 
 
 class CreditTransactionList(Base):
