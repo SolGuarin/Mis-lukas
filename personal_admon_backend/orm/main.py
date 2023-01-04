@@ -306,37 +306,62 @@ def show_all_account(
     return account
 
 
-# # endpoints debit transaction
-# @app.get(
-#     path="/debit_transactions/{debit_transaction_id}",
-#     status_code=status.HTTP_200_OK,
-#     response_model=DebitTransactionGetSchema,
-#     tags=["Debit Transactions"]
-# )
-# def show_debit_transaction(
-#         debit_transaction_id: int = Path(
-#             ...,
-#             title="Debit Transaction Id",
-#             description="This is Debit Transaction Id. It´s required",
-#             example=1
-#         ),
-#         db: Session = Depends(get_db)
-# ):
-#     """
-#     Show Debit Transaction
-#
-#     This path operation show a user the in the app
-#
-#     Parameters:
-#     - usuario_id: int
-#
-#     Returns a UserSchema model with id, login, password, nickname and email
-#     """
-#     debit_transaction = crud.get_debit_transaction(db=db, debit_transaction_id=debit_transaction_id)
-#     if debit_transaction:
-#         return debit_transaction
-#     else:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="This debit transaction doesn't exist"
-#         )
+# endpoints debit transaction
+
+# # get debit transaction
+@app.get(
+    path="/debit_transactions/{debit_transaction_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=DebitTransactionGetSchema,
+    tags=["debit transaction"]
+)
+def show_debit_transaction(
+        debit_transaction_id: int = Path(
+            ...,
+            title="Debit transaction Id",
+            description="This is Debit Transaction Id. It´s required"
+        ),
+        db: Session = Depends(get_db)
+):
+    """
+    Show Debit Transaction
+
+    This path operation show a user the in the app
+
+    Parameters:
+    - usuario_id: int
+
+    Returns a UserSchema model with id, login, password, nickname and email
+    """
+    debit_transaction = crud.get_debit_transaction(db=db, debit_transaction_id=debit_transaction_id)
+    if debit_transaction:
+        return debit_transaction
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="This debit transaction doesn't exist"
+        )
+
+
+# # get all debit transaction
+@app.get(
+    path="/debit transactions",
+    status_code=status.HTTP_200_OK,
+    response_model=list[DebitTransactionGetSchema],
+    tags=["debit transaction"]
+)
+def show_all_debit_transaction(
+        db: Session = Depends(get_db)
+):
+    """
+    Show all Debit Transaction
+
+    This path operation show a user the in the app
+
+    Parameters:
+    - usuario_id: int
+
+    Returns a UserSchema model with id, login, password, nickname and email
+    """
+    debit_transaction = crud.get_all_debit_transaction(db=db)
+    return debit_transaction

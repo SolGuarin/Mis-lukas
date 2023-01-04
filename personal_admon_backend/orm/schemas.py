@@ -1,4 +1,4 @@
-import uuid
+from uuid import UUID
 from typing import Optional
 
 from pydantic import BaseModel
@@ -59,7 +59,6 @@ class MovementGetSchema(BaseModel):
 
 # schema category
 
-
 class CategoryCreateSchema(BaseModel):
     name: str = Field()
     type: str = Field()
@@ -76,10 +75,25 @@ class AccountCreateSchema(BaseModel):
 
 
 # schema Debit Transaction
-# class DebitTransactionGetSchema(BaseModel):
-#     id: int = Field()
-#     uid: uuid = Field()
-#     source: str = Field()
+class DebitTransactionGetSchema(BaseModel):
+    id: int = Field()
+    uid: UUID = Field()
+    date: Optional[str] = Field()
+    description: Optional[str] = Field()
+    value: Optional[float] = Field()
+    account: Optional[str] = Field()
+    repetition: Optional[int] = Field()
+    branch_office: Optional[str] = Field()
+    discount: Optional[float] = Field()
+    balance: Optional[float] = Field()
+    source_file: Optional[str] = Field()
+    reference: Optional[str] = Field()
+    document: Optional[str] = Field()
+    office: Optional[str] = Field()
+    source: Optional[str] = Field()
+
+    class Config:
+        orm_mode = True
 
 
 

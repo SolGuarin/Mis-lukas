@@ -59,3 +59,7 @@ def get_all_account(db: Session):
 # crud debit transaction
 def get_debit_transaction(db: Session, debit_transaction_id: int):
     return db.query(models.DebitTransaction).filter(models.DebitTransaction.id == debit_transaction_id).first()
+
+
+def get_all_debit_transaction(db: Session):
+    return db.query(models.DebitTransaction).filter().all()
