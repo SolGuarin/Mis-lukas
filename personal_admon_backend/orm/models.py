@@ -1,22 +1,7 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, Float, BigInteger, Boolean
-from datetime import date
+from sqlalchemy import Column, Integer, String, Float, BigInteger, Boolean, ForeignKey
 from sqlalchemy.dialects import postgresql
 from personal_admon_backend.orm.database import Base
-
-
-class Movement(Base):
-    __tablename__ = "movement"
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    account_id = Column(BigInteger)
-    category_id = Column(BigInteger)
-    amount = Column(Float)
-    note = Column(String)
-    description = Column(String)
-    from_account_id = Column(Integer)
-    to_account_id = Column(Integer)
-    type = Column(String)
-    date = Column(String)
+from sqlalchemy.orm import relationship
 
 
 class Account(Base):
@@ -25,6 +10,22 @@ class Account(Base):
     name = Column(String)
     type = Column(String)
     note = Column(String)
+
+
+class Movement(Base):
+    __tablename__ = "movement"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(BigInteger, ForeignKey("account.id"))
+    account = relationship("Account", foreign_keys=[account_id])
+    category_id = Column(BigInteger)
+    amount = Column(Float)
+    note = Column(String)
+    description = Column(String)
+    from_account_id = Column(Integer)
+    to_account_id = Column(Integer)
+    type = Column(String)
+    date = Column(String)
 
 
 class Category(Base):
