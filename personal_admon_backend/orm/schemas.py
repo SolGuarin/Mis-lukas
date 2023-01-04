@@ -15,6 +15,15 @@ class AccountGetSchema(BaseModel):
         orm_mode = True
 
 
+class CategoryGetSchema(BaseModel):
+    id: int = Field()
+    name: str = Field()
+    type: str = Field()
+
+    class Config:
+        orm_mode = True
+
+
 class MovementCreateSchema(BaseModel):
     account_id: Optional[int] = Field()
     category_id: Optional[int] = Field()
@@ -42,6 +51,7 @@ class MovementGetSchema(BaseModel):
     type: str = Field()
     date: str = Field()
     account: AccountGetSchema
+    category: CategoryGetSchema
 
     class Config:
         orm_mode = True
@@ -51,15 +61,6 @@ class MovementGetSchema(BaseModel):
 
 
 class CategoryCreateSchema(BaseModel):
-    name: str = Field()
-    type: str = Field()
-
-    class Config:
-        orm_mode = True
-
-
-class CategoryGetSchema(BaseModel):
-    id: int = Field()
     name: str = Field()
     type: str = Field()
 
