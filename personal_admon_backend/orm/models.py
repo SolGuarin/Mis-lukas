@@ -70,7 +70,7 @@ class DebitTransaction(Base):
 class CreditTransaction(Base):
     __tablename__ = "credit_transaction"
 
-    id = Column(Integer)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     uid = Column(postgresql.UUID(as_uuid=True), primary_key=True)
     nro_authorization = Column(String)
     transaction_date = Column(String)

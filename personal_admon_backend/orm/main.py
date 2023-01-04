@@ -365,3 +365,64 @@ def show_all_debit_transaction(
     """
     debit_transaction = crud.get_all_debit_transaction(db=db)
     return debit_transaction
+
+
+# endpoints credit transaction
+
+# # get credit transaction
+@app.get(
+    path="/credit_transactions/{credit_transaction_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=CreditTransactionGetSchema,
+    tags=["credit transaction"]
+)
+def show_credit_transaction(
+        credit_transaction_id: int = Path(
+            ...,
+            title="Credit transaction Id",
+            description="This is Credit Transaction Id. It´s required"
+        ),
+        db: Session = Depends(get_db)
+):
+    """
+    Show Credit Transaction
+
+    This path operation show a user the in the app
+
+    Parameters:
+    - usuario_id: int
+
+    Returns a UserSchema model with id, login, password, nickname and email
+    """
+    credit_transaction = crud.get_credit_transaction(db=db, credit_transaction_id=credit_transaction_id)
+    if credit_transaction:
+        return credit_transaction
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="This credit transaction doesn't exist"
+        )
+
+
+# # get all credit transaction
+@app.get(
+    path="/credit transactions",
+    status_code=status.HTTP_200_OK,
+    response_model=list[CreditTransactionGetSchema],
+    tags=["credit transaction"]
+)
+def show_all_credit_transaction(
+        db: Session = Depends(get_db)
+):
+    """
+    Show all Credit Transaction
+
+    This path operation show a user the in the app
+
+    Parameters:
+    - usuario_id: int
+
+    Returns a UserSchema model with id, login, password, nickname and email
+    """
+    credit_transaction = crud.get_all_credit_transaction(db=db)
+    return credit_transaction

@@ -96,4 +96,18 @@ class DebitTransactionGetSchema(BaseModel):
         orm_mode = True
 
 
+# schema credit transaction
+class CreditTransactionGetSchema(BaseModel):
+    id: int = Field()
+    uid: UUID = Field()
+    nro_authorization: str = Field()
+    transaction_date: str = Field()
+    description: str = Field()
+    original_value: float = Field()
+    currency: str = Field()
+    repetition: int = Field()
+    is_temporal: Optional[bool] = Field()
+
+    class Config:
+        orm_mode = True
 
