@@ -6,6 +6,7 @@ from personal_admon_backend.orm import crud
 from personal_admon_backend.orm.database import SessionLocal
 from personal_admon_backend.orm.schemas import *
 from personal_admon_backend.orm.models import *
+from uuid import UUID
 
 app = FastAPI()
 
@@ -310,13 +311,13 @@ def show_all_account(
 
 # # get debit transaction
 @app.get(
-    path="/debit_transactions/{debit_transaction_id}",
+    path="/debit_transactions/{debit_transaction_uid}",
     status_code=status.HTTP_200_OK,
     response_model=DebitTransactionGetSchema,
     tags=["debit transaction"]
 )
 def show_debit_transaction(
-        debit_transaction_id: int = Path(
+        debit_transaction_uid: UUID = Path(
             ...,
             title="Debit transaction Id",
             description="This is Debit Transaction Id. It´s required"
@@ -333,7 +334,7 @@ def show_debit_transaction(
 
     Returns a UserSchema model with id, login, password, nickname and email
     """
-    debit_transaction = crud.get_debit_transaction(db=db, debit_transaction_id=debit_transaction_id)
+    debit_transaction = crud.get_debit_transaction(db=db, debit_transaction_uid=debit_transaction_uid)
     if debit_transaction:
         return debit_transaction
     else:
@@ -371,13 +372,13 @@ def show_all_debit_transaction(
 
 # # get credit transaction
 @app.get(
-    path="/credit_transactions/{credit_transaction_id}",
+    path="/credit_transactions/{credit_transaction_uid}",
     status_code=status.HTTP_200_OK,
     response_model=CreditTransactionGetSchema,
     tags=["credit transaction"]
 )
 def show_credit_transaction(
-        credit_transaction_id: int = Path(
+        credit_transaction_uid: UUID = Path(
             ...,
             title="Credit transaction Id",
             description="This is Credit Transaction Id. It´s required"
@@ -394,7 +395,7 @@ def show_credit_transaction(
 
     Returns a UserSchema model with id, login, password, nickname and email
     """
-    credit_transaction = crud.get_credit_transaction(db=db, credit_transaction_id=credit_transaction_id)
+    credit_transaction = crud.get_credit_transaction(db=db, credit_transaction_uid=credit_transaction_uid)
     if credit_transaction:
         return credit_transaction
     else:
@@ -426,3 +427,43 @@ def show_all_credit_transaction(
     """
     credit_transaction = crud.get_all_credit_transaction(db=db)
     return credit_transaction
+
+
+# endpoint movement transaction link
+@app.post(
+    path="/movements_transactions_link",
+    status_code=status.HTTP_201_CREATED,  # porque es para crear una persona
+    tags=["movement transaction link"],
+    summary="create movement transaction link in the app",
+    response_model=MovementTransactionLinkCreateSchema
+)
+def create_movement(movement: MovementTransactionLinkCreateSchema = Body(...), db: Session = Depends(get_db)):
+    """
+    Create Movement
+
+    This path operation creates a user in the app and save the information in the database
+
+    Parameters:
+        -Request body parameter:
+            -**usuario: UsuariosCreateSchema** -> A usuario model with login, password, nickname and email
+    """
+    # Mis validations
+    exist_movement = crud.get_movement(db=db, movement_id=movement.movement_id) is not None
+    exist_debit_transaction = crud.get_debit_transaction(
+        db=db, debit_transaction_uid=movement.debit_transaction_uid) is not None
+    exist_credit_transaction = crud.get_credit_transaction(
+        db=db, credit_transaction_uid=movement.credit_transaction_uid) is not None
+
+    # print(f'exist_movement: {exist_movement}')
+    # print(f'exist_debit_transaction: {exist_debit_transaction}')
+    # print(f'exist_credit_transaction: {exist_credit_transaction}')
+    # input('yaaaaaaa')
+
+    if exist_movement and (exist_credit_transaction or exist_debit_transaction):
+        movement = crud.create_movement_transaction_link(db=db, movement_transaction_link=movement)
+        return movement
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail='Movement or Category was not found in the db',
+        )

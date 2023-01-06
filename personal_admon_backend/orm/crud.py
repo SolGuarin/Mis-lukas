@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from personal_admon_backend.orm import models
 from personal_admon_backend.orm.schemas import *
-
+from sqlalchemy.dialects import postgresql
 
 # crud Movement
 
@@ -57,8 +57,8 @@ def get_all_account(db: Session):
 
 
 # crud debit transaction
-def get_debit_transaction(db: Session, debit_transaction_id: int):
-    return db.query(models.DebitTransaction).filter(models.DebitTransaction.id == debit_transaction_id).first()
+def get_debit_transaction(db: Session, debit_transaction_uid: UUID):
+    return db.query(models.DebitTransaction).filter(models.DebitTransaction.uid == debit_transaction_uid).first()
 
 
 def get_all_debit_transaction(db: Session):
@@ -66,9 +66,19 @@ def get_all_debit_transaction(db: Session):
 
 
 # crud credit transaction
-def get_credit_transaction(db: Session, credit_transaction_id: int):
-    return db.query(models.CreditTransaction).filter(models.CreditTransaction.id == credit_transaction_id).first()
+def get_credit_transaction(db: Session, credit_transaction_uid: UUID):
+    return db.query(models.CreditTransaction).filter(models.CreditTransaction.uid == credit_transaction_uid).first()
 
 
 def get_all_credit_transaction(db: Session):
     return db.query(models.CreditTransaction).filter().all()
+
+
+# crud movement transaction link
+
+
+def create_movement_transaction_link(db: Session, movement_transaction_link: MovementTransactionLinkCreateSchema):
+    db_item = models.MovementTransactionLink(**movement_transaction_link.dict())
+    db.add(db_item)
+    db.commit()
+    return db_item

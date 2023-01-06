@@ -41,17 +41,18 @@ class MovementCreateSchema(BaseModel):
 
 class MovementGetSchema(BaseModel):
     id: int = Field()
-    account_id: int = Field()
+    account_id: Optional[int] = Field()
     category_id: int = Field()
     amount: float = Field()
     note: str = Field()
     description: str = Field()
-    from_account_id: int = Field()
-    to_account_id: int = Field()
+    from_account_id: Optional[int] = Field()
+    to_account_id: Optional[int] = Field()
     type: str = Field()
     date: str = Field()
     account: AccountGetSchema
     category: CategoryGetSchema
+    from_account: Optional[AccountGetSchema]
 
     class Config:
         orm_mode = True
@@ -76,7 +77,6 @@ class AccountCreateSchema(BaseModel):
 
 # schema Debit Transaction
 class DebitTransactionGetSchema(BaseModel):
-    id: int = Field()
     uid: UUID = Field()
     date: Optional[str] = Field()
     description: Optional[str] = Field()
@@ -98,7 +98,6 @@ class DebitTransactionGetSchema(BaseModel):
 
 # schema credit transaction
 class CreditTransactionGetSchema(BaseModel):
-    id: int = Field()
     uid: UUID = Field()
     nro_authorization: str = Field()
     transaction_date: str = Field()
@@ -111,3 +110,15 @@ class CreditTransactionGetSchema(BaseModel):
     class Config:
         orm_mode = True
 
+
+# schema movement transaction link
+
+class MovementTransactionLinkCreateSchema(BaseModel):
+    movement_id: int = Field(
+        ...
+    )
+    debit_transaction_uid: Optional[UUID] = Field()
+    credit_transaction_uid: Optional[UUID] = Field()
+
+    class Config:
+        orm_mode = True

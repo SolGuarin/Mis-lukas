@@ -23,7 +23,8 @@ class Movement(Base):
     amount = Column(Float)
     note = Column(String)
     description = Column(String)
-    from_account_id = Column(Integer)
+    from_account_id = Column(Integer, ForeignKey("account.id"))
+    from_account = relationship("Account", foreign_keys=[from_account_id])
     to_account_id = Column(Integer)
     type = Column(String)
     date = Column(String)
@@ -41,16 +42,14 @@ class MovementTransactionLink(Base):
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     movement_id = Column(Integer)
-    debit_transaction_uid = Column(postgresql.UUID)
-    credit_transaction_uid = Column(postgresql.UUID)
-    investment_uid = Column(postgresql.UUID)
-    backward_transaction_uid = Column(postgresql.UUID)
+    debit_transaction_uid = Column(postgresql.UUID(as_uuid=True))
+    credit_transaction_uid = Column(postgresql.UUID(as_uuid=True))
+
 
 
 class DebitTransaction(Base):
     __tablename__ = "debit_transaction"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
     uid = Column(postgresql.UUID(as_uuid=True), primary_key=True)
     date = Column(String)
     description = Column(String)
@@ -70,7 +69,6 @@ class DebitTransaction(Base):
 class CreditTransaction(Base):
     __tablename__ = "credit_transaction"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
     uid = Column(postgresql.UUID(as_uuid=True), primary_key=True)
     nro_authorization = Column(String)
     transaction_date = Column(String)
@@ -96,6 +94,7 @@ class CreditTransactionList(Base):
 
 class ExchangeCurrency(Base):
     __tablename__ = "exchange_currency"
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     value_source = Column(String)
     currency_source = Column(String)
